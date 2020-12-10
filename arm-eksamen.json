@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageCount": {
+            "type": "int",
+            "defaultValue": 5
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "storage"
+        },
+            "storageAccountSKU": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS",
+                "Premium_LRS"
+            ],
+            "defaultValue": "Standard_LRS"            
+        }      
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[concat('stor', uniqueString(resourceGroup().id), copyIndex('copyStorage'))]",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "[parameters('storageAccountSKU')]"
+            },
+            "copy": {
+                "name": "copyStorage",
+                "count": "[parameters('storageCount')]"
+            }
+        }
+        
+       
+    ],
+        
+    "outputs": {},
+    "functions": []
+}
